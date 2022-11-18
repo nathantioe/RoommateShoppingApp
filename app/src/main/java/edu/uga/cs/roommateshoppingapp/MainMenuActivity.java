@@ -34,7 +34,7 @@ class ButtonClickListener2 implements
         if (view.getId() == R.id.buttonRecentBuys ) {
             Intent intent = new
                     Intent(view.getContext(),
-                    RegistrerActivity.class);
+                    RecentBuysActivity.class);
             String message = "";
             intent.putExtra("MESSAGE", message);
             view.getContext().startActivity(intent);
