@@ -46,6 +46,8 @@ public class EnterPriceActivity extends AppCompatActivity {
                 String message = "";
                 intent.putExtra("MESSAGE", message);
                 view.getContext().startActivity(intent);
+
+                //här ska de läggas till i en lista med färdiga köp
             }
         });
 
@@ -61,9 +63,6 @@ public class EnterPriceActivity extends AppCompatActivity {
 
         this.listView.setAdapter(arrayAdapter);
 
-        //for(int i=0;i< list.length; i++ )  {
-        //    this.listView.setItemChecked(i,list[i].isActive());
-       // }
     }
 
     private void showCustomDialog(int position) {
