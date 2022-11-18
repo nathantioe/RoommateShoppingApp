@@ -7,23 +7,22 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-public class MainActivity extends AppCompatActivity {
+public class MainMenuActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.activity_main_menu);
+        Button recentBuys = findViewById(R.id.buttonRecentBuys);
+        recentBuys.setOnClickListener(new ButtonClickListener2());
 
-        Button login = findViewById(R.id.buttonLogin);
-        login.setOnClickListener(new ButtonClickListener());
-
-        Button registrer = findViewById(R.id.buttonRegistrer);
-        registrer.setOnClickListener(new ButtonClickListener());
+        Button shoppingList = findViewById(R.id.buttonShoppingList);
+        shoppingList.setOnClickListener(new ButtonClickListener2());
 
     }
 }
 
-class ButtonClickListener implements
+class ButtonClickListener2 implements
         View.OnClickListener
 {
     /**
@@ -32,17 +31,17 @@ class ButtonClickListener implements
      */
     @Override
     public void onClick( View view ) {
-        if (view.getId() == R.id.buttonRegistrer ) {
+        if (view.getId() == R.id.buttonRecentBuys ) {
             Intent intent = new
                     Intent(view.getContext(),
                     RegistrerActivity.class);
             String message = "";
             intent.putExtra("MESSAGE", message);
             view.getContext().startActivity(intent);
-        } if (view.getId() == R.id.buttonLogin ) {
+        } if (view.getId() == R.id.buttonShoppingList ) {
             Intent intent = new
                     Intent(view.getContext(),
-                    MainMenuActivity.class);
+                    ShoppingListActivity.class);
             String message = "";
             intent.putExtra("MESSAGE", message);
             view.getContext().startActivity(intent);
