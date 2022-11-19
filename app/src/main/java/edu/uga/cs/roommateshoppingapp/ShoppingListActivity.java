@@ -172,7 +172,7 @@ public class ShoppingListActivity extends AppCompatActivity {
     }
 
     private void initData(){
-        ShoppingListItem paper = new ShoppingListItem("paper");
+        ShoppingListItem paper = new ShoppingListItem("3 items bought by: Bob  \nTot: 12.34");
         ShoppingListItem water = new ShoppingListItem("water");
         ShoppingListItem monster = new ShoppingListItem("monster");
         ShoppingListItem paper1 = new ShoppingListItem("paper1");

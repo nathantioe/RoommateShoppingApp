@@ -13,6 +13,11 @@ public class ShoppingListItem implements Serializable {
         this.active = false;
     }
 
+    public ShoppingListItem(String name, Double price){
+        this.itemName = name;
+        this.price = price;
+    }
+
     public ShoppingListItem(String name, boolean Active){
         this.itemName = name;
         this.active = Active;
@@ -36,6 +41,10 @@ public class ShoppingListItem implements Serializable {
 
     public void setPrice(Double price){
         this.price = price;
+    }
+
+    public Double getPrice(){
+        return price;
     }
 
 
