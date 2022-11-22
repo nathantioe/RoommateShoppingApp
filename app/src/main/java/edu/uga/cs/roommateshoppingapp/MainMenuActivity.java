@@ -35,16 +35,16 @@ public class MainMenuActivity extends AppCompatActivity {
         @Override
         public void onClick( View view ) {
             if (view.getId() == R.id.buttonRecentBuys ) {
-                Intent intent = new
-                        Intent(view.getContext(),
-                        RecentBuysActivity.class);
-                String message = "";
-                intent.putExtra("MESSAGE", message);
-                view.getContext().startActivity(intent);
+//                Intent intent = new
+//                        Intent(view.getContext(),
+//                        RecentBuysActivity.class);
+//                String message = "";
+//                intent.putExtra("MESSAGE", message);
+//                view.getContext().startActivity(intent);
             } else if (view.getId() == R.id.buttonShoppingList ) {
                 Intent intent = new
                         Intent(view.getContext(),
-                        ShoppingListActivity.class);
+                        ShoppingList2Activity.class);
                 String message = "";
                 intent.putExtra("MESSAGE", message);
                 view.getContext().startActivity(intent);
