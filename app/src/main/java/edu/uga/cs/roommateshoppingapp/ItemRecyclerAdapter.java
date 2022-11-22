@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,7 +28,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
         TextView name;
 
-        public ItemHolder(View itemView ) {
+        public ItemHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById( R.id.name );
         }
@@ -65,10 +66,23 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
                 editItemFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
             }
         });
+
+        holder.itemView.findViewById(R.id.purchaseButton).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                PurchaseItemDialogFragment purchaseItemFragment =
+                        PurchaseItemDialogFragment.newInstance( holder.getAdapterPosition(), key, name);
+                purchaseItemFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
+            }
+        });
+
+
     }
 
     @Override
     public int getItemCount() {
         return itemList.size();
     }
+
+
 }
