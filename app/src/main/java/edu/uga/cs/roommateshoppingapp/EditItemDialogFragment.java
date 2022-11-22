@@ -20,28 +20,18 @@ public class EditItemDialogFragment extends DialogFragment {
     public static final int SAVE = 1;   // update an existing job lead
     public static final int DELETE = 2; // delete an existing job lead
 
-    private EditText companyNameView;
-    private EditText phoneView;
-    private EditText urlView;
-    private EditText commentsView;
-
     private EditText itemNameView;
 
-    int position;     // the position of the edited JobLead on the list of job leads
-    String key;
-    String itemName;
-
-    String company;
-    String phone;
-    String url;
-    String comments;
+    private int position;     // the position of the edited JobLead on the list of job leads
+    private String key;
+    private String itemName;
 
     // A callback listener interface to finish up the editing of a JobLead.
     // ReviewJobLeadsActivity implements this listener interface, as it will
     // need to update the list of JobLeads and also update the RecyclerAdapter to reflect the
     // changes.
-    public interface EditJobLeadDialogListener {
-        //void updateJobLead(int position, ShoppingListItem item, int action);
+    public interface EditItemDialogListener {
+        void updateItem(int position, Item item, int action);
     }
 
     public static EditItemDialogFragment newInstance(int position, String key, String itemName) {
@@ -95,42 +85,47 @@ public class EditItemDialogFragment extends DialogFragment {
         // The Delete button handler
         builder.setNeutralButton( "DELETE", new DeleteButtonClickListener() );
 
+        //builder.setNeutralButton("PURCHASE", new PurchaseButtonClickListener());
+
         // Create the AlertDialog and show it
         return builder.create();
+    }
+
+    private class PurchaseButtonClickListener implements DialogInterface.OnClickListener {
+        @Override
+        public void onClick(DialogInterface dialog, int which) {
+
+        }
     }
 
     private class SaveButtonClickListener implements DialogInterface.OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-//            String companyName = companyNameView.getText().toString();
-//            String phone = phoneView.getText().toString();
-//            String url = urlView.getText().toString();
-//            String comments = commentsView.getText().toString();
-//            JobLead jobLead = new JobLead( companyName, phone, url, comments );
-//            jobLead.setKey( key );
-//
-//            // get the Activity's listener to add the new job lead
-//            EditJobLeadDialogListener listener = (EditJobLeadDialogFragment.EditJobLeadDialogListener) getActivity();
-//            // add the new job lead
-//            listener.updateJobLead( position, jobLead, SAVE );
-//
-//            // close the dialog
-//            dismiss();
+            String name = itemNameView.getText().toString();
+            Item item = new Item(name);
+            item.setKey(key);
+
+            // get the Activity's listener to add the new job lead
+            EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
+            // add the new job lead
+            listener.updateItem( position, item, SAVE );
+
+            // close the dialog
+            dismiss();
         }
     }
 
     private class DeleteButtonClickListener implements DialogInterface.OnClickListener {
         @Override
         public void onClick( DialogInterface dialog, int which ) {
-//
-//            JobLead jobLead = new JobLead( company, phone, url, comments );
-//            jobLead.setKey( key );
-//
-//            // get the Activity's listener to add the new job lead
-//            EditJobLeadDialogFragment.EditJobLeadDialogListener listener = (EditJobLeadDialogFragment.EditJobLeadDialogListener) getActivity();            // add the new job lead
-//            listener.updateJobLead( position, jobLead, DELETE );
-//            // close the dialog
-//            dismiss();
+            Item item = new Item(itemName);
+            item.setKey(key);
+
+            // get the Activity's listener to add the new job lead
+            EditItemDialogFragment.EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();            // add the new job lead
+            listener.updateItem( position, item, DELETE );
+            // close the dialog
+            dismiss();
         }
     }
 }

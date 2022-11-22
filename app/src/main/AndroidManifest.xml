@@ -15,7 +15,7 @@
         android:theme="@style/Theme.RoommateShoppingApp"
         tools:targetApi="31">
         <activity
-            android:name=".ShoppingList2Activity"
+            android:name=".ShoppingListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
@@ -30,13 +30,6 @@
         </activity>
         <activity
             android:name=".EnterPriceActivity"
-            android:exported="false">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
-            android:name=".ShoppingListActivity"
             android:exported="false">
             <meta-data
                 android:name="android.app.lib_name"
