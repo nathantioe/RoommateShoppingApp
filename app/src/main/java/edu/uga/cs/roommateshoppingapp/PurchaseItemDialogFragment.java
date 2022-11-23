@@ -3,6 +3,7 @@ package edu.uga.cs.roommateshoppingapp;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,7 +21,7 @@ public class PurchaseItemDialogFragment extends DialogFragment {
     private String itemName;
 
     public interface PurchaseItemDialogListener {
-        void purchaseItem(Item item);
+        void purchaseItem(int position, Item item);
     }
 
     public static PurchaseItemDialogFragment newInstance(int position, String key, String itemName) {
@@ -78,15 +79,14 @@ public class PurchaseItemDialogFragment extends DialogFragment {
             Double price = Double.parseDouble(itemPriceView.getText().toString());
 
             Item item = new Item(itemName, price);
+            item.setKey(key);
 
             // get the Activity's listener to add the new job lead
             PurchaseItemDialogListener listener = (PurchaseItemDialogListener) getActivity();
 
             // add the new job lead
-            listener.purchaseItem(item);
+            listener.purchaseItem(position, item);
 
-            // close the dialog
-            dismiss();
         }
     }
 }

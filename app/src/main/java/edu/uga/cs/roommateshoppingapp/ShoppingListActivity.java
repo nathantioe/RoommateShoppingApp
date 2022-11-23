@@ -25,7 +25,8 @@ import java.util.List;
 
 public class ShoppingListActivity extends AppCompatActivity
         implements AddItemDialogFragment.AddItemDialogListener,
-        EditItemDialogFragment.EditItemDialogListener
+        EditItemDialogFragment.EditItemDialogListener,
+        PurchaseItemDialogFragment.PurchaseItemDialogListener
 {
 
     public static final String DEBUG_TAG = "ReviewJobLeadsActi";
@@ -224,5 +225,37 @@ public class ShoppingListActivity extends AppCompatActivity
                 }
             });
         }
+    }
+
+    public void purchaseItem(int position, Item item) {
+        // add item to recent purchase
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("recent-purchases");
+        myRef.push().setValue(item)
+                .addOnSuccessListener( new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        recyclerView.post( new Runnable() {
+                            @Override
+                            public void run() {
+                                recyclerView.smoothScrollToPosition(itemList.size()-1 );
+                            }
+                        } );
+                        Toast.makeText(getApplicationContext(), "Item created in recent purchases",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener( new OnFailureListener() {
+                    @Override
+                    public void onFailure( @NonNull Exception e ) {
+                        Toast.makeText( getApplicationContext(), "Failed to create item in recent purchases",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+
+        // delete from shopping list
+        updateItem(position, item, EditItemDialogFragment.DELETE);
     }
 }
