@@ -13,6 +13,8 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+import com.google.firebase.auth.FirebaseAuth;
+
 public class PurchaseItemDialogFragment extends DialogFragment {
 
     private EditText itemPriceView;
@@ -77,8 +79,10 @@ public class PurchaseItemDialogFragment extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             Double price = Double.parseDouble(itemPriceView.getText().toString());
+            final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+            String email = firebaseAuth.getCurrentUser().getEmail();
 
-            Item item = new Item(itemName, price);
+            Item item = new Item(itemName, price, email);
             item.setKey(key);
 
             // get the Activity's listener to add the new job lead

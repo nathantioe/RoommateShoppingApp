@@ -14,6 +14,8 @@ import android.widget.Toast;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
@@ -47,14 +49,17 @@ public class RecentBuysActivity extends AppCompatActivity
 
         recyclerView = findViewById(R.id.purchases);
 
-//        FloatingActionButton floatingButton = findViewById(R.id.floatingActionButton);
-//        floatingButton.setOnClickListener( new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
+        FloatingActionButton settleButton = findViewById(R.id.settle);
+        settleButton.setOnClickListener( new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
 //                DialogFragment newFragment = new AddItemDialogFragment();
 //                newFragment.show( getSupportFragmentManager(), null);
-//            }
-//        });
+                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
+                Toast.makeText(getApplicationContext(), "User: " + user.getEmail(),
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
 
         // initialize the Itemlist
         purchaseList = new ArrayList<Item>();

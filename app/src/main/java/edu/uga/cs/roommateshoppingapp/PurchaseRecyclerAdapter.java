@@ -29,11 +29,13 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
 
         TextView name;
         TextView price;
+        TextView purchaser;
 
         public ItemHolder(View itemView) {
             super(itemView);
             name = itemView.findViewById(R.id.purchaseName);
             price = itemView.findViewById(R.id.purchasePrice);
+            purchaser = itemView.findViewById(R.id.purchaser);
         }
     }
 
@@ -52,10 +54,12 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
         String key = item.getKey();
         String name = item.getItemName();
         String price = item.getPrice().toString();
+        String purchaser = item.getPurchaser();
 
         holder.name.setText( item.getItemName());
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         holder.price.setText(formatter.format(item.getPrice()));
+        holder.purchaser.setText(item.getPurchaser());
 
         // We can attach an OnClickListener to the itemView of the holder;
         // itemView is a public field in the Holder class.
@@ -68,7 +72,7 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
             public void onClick(View v) {
 
                 EditPurchaseDialogFragment editPurchaseFragment =
-                        EditPurchaseDialogFragment.newInstance( holder.getAdapterPosition(), key, name, price);
+                        EditPurchaseDialogFragment.newInstance( holder.getAdapterPosition(), key, name, price, purchaser);
                 editPurchaseFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
             }
         });

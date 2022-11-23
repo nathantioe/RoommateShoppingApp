@@ -26,6 +26,7 @@ public class EditPurchaseDialogFragment extends DialogFragment {
     private String key;
     private String itemName;
     private String price;
+    private String purchaser;
 
     // A callback listener interface to finish up the editing of a JobLead.
     // ReviewJobLeadsActivity implements this listener interface, as it will
@@ -35,7 +36,7 @@ public class EditPurchaseDialogFragment extends DialogFragment {
         void updatePurchase(int position, Item item, int action);
     }
 
-    public static EditPurchaseDialogFragment newInstance(int position, String key, String itemName, String price) {
+    public static EditPurchaseDialogFragment newInstance(int position, String key, String itemName, String price, String purchaser) {
         EditPurchaseDialogFragment dialog = new EditPurchaseDialogFragment();
 
         // Supply job lead values as an argument.
@@ -44,6 +45,7 @@ public class EditPurchaseDialogFragment extends DialogFragment {
         args.putInt( "position", position );
         args.putString("itemName", itemName);
         args.putString("price", price);
+        args.putString("purchaser", purchaser);
         dialog.setArguments(args);
 
         return dialog;
@@ -57,6 +59,7 @@ public class EditPurchaseDialogFragment extends DialogFragment {
         position = getArguments().getInt( "position" );
         itemName = getArguments().getString( "itemName" );
         price = getArguments().getString("price");
+        purchaser = getArguments().getString("purchaser");
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final View layout = inflater.inflate(R.layout.edit_purchase_dialog, getActivity().findViewById( R.id.constraintLayout ) );
@@ -96,9 +99,8 @@ public class EditPurchaseDialogFragment extends DialogFragment {
         @Override
         public void onClick(DialogInterface dialog, int which) {
             String price = priceEditText.getText().toString();
-            Item item = new Item(itemName);
+            Item item = new Item(itemName, Double.parseDouble(price), purchaser);
             item.setKey(key);
-            item.setPrice(Double.parseDouble(price));
 
             // get the Activity's listener to add the new job lead
             EditPurchaseDialogListener listener = (EditPurchaseDialogFragment.EditPurchaseDialogListener) getActivity();

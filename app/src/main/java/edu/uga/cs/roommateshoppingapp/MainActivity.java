@@ -2,6 +2,7 @@ package edu.uga.cs.roommateshoppingapp;
 
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
@@ -15,6 +16,13 @@ import com.firebase.ui.auth.AuthUI;
 import com.firebase.ui.auth.FirebaseAuthUIActivityResultContract;
 import com.firebase.ui.auth.IdpResponse;
 import com.firebase.ui.auth.data.model.FirebaseAuthUIAuthenticationResult;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.database.ValueEventListener;
 
 import java.util.Arrays;
 import java.util.List;
@@ -87,6 +95,8 @@ public class MainActivity extends AppCompatActivity {
         if (result.getResultCode() == RESULT_OK) {
             // Successfully signed in
 
+            addUserIfNotAlready();
+
             // after a successful sign in, start the MainMenuActivity
             Intent intent = new Intent( this, MainMenuActivity.class );
             startActivity( intent );
@@ -98,5 +108,37 @@ public class MainActivity extends AppCompatActivity {
                     Toast.LENGTH_SHORT).show();
         }
     }
+
+    private void addUserIfNotAlready() {
+        final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
+        String email = firebaseAuth.getCurrentUser().getEmail();
+
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("users");
+        myRef.addValueEventListener( new ValueEventListener() {
+            @Override
+            public void onDataChange( @NonNull DataSnapshot snapshot ) {
+                boolean alreadyContainsEmail = false;
+                for( DataSnapshot postSnapshot: snapshot.getChildren() ) {
+                    User user = postSnapshot.getValue(User.class);
+                    if (user.getEmail().equals(email)) {
+                        alreadyContainsEmail = true;
+                        break;
+                    }
+                }
+                if (!alreadyContainsEmail) {
+                    // add user
+                    User newUser = new User(email);
+                    myRef.push().setValue(newUser);
+                }
+            }
+
+            @Override
+            public void onCancelled( @NonNull DatabaseError databaseError ) {
+                System.out.println( "ValueEventListener: reading failed: " + databaseError.getMessage() );
+            }
+        } );
+    }
+
 }
 
