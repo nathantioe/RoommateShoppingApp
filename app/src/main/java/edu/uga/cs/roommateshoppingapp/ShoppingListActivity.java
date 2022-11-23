@@ -29,7 +29,7 @@ public class ShoppingListActivity extends AppCompatActivity
         PurchaseItemDialogFragment.PurchaseItemDialogListener
 {
 
-    public static final String DEBUG_TAG = "ReviewJobLeadsActi";
+    public static final String DEBUG_TAG = "ShoppingListActivity";
 
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter recyclerAdapter;
@@ -44,7 +44,7 @@ public class ShoppingListActivity extends AppCompatActivity
         Log.d( DEBUG_TAG, "onCreate()" );
 
         super.onCreate( savedInstanceState );
-        setContentView( R.layout.activity_shopping_list2 );
+        setContentView( R.layout.activity_shopping_list);
 
         recyclerView = findViewById(R.id.recyclerView);
 

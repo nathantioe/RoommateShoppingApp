@@ -14,34 +14,36 @@ import androidx.fragment.app.DialogFragment;
 
 // This is a DialogFragment to handle edits to a JobLead.
 // The edits are: updates and deletions of existing JobLeads.
-public class EditItemDialogFragment extends DialogFragment {
+public class EditPurchaseDialogFragment extends DialogFragment {
 
     // indicate the type of an edit
     public static final int SAVE = 1;   // update an existing job lead
     public static final int DELETE = 2; // delete an existing job lead
 
-    private EditText itemNameView;
+    private EditText priceEditText;
 
     private int position;     // the position of the edited JobLead on the list of job leads
     private String key;
     private String itemName;
+    private String price;
 
     // A callback listener interface to finish up the editing of a JobLead.
     // ReviewJobLeadsActivity implements this listener interface, as it will
     // need to update the list of JobLeads and also update the RecyclerAdapter to reflect the
     // changes.
-    public interface EditItemDialogListener {
-        void updateItem(int position, Item item, int action);
+    public interface EditPurchaseDialogListener {
+        void updatePurchase(int position, Item item, int action);
     }
 
-    public static EditItemDialogFragment newInstance(int position, String key, String itemName) {
-        EditItemDialogFragment dialog = new EditItemDialogFragment();
+    public static EditPurchaseDialogFragment newInstance(int position, String key, String itemName, String price) {
+        EditPurchaseDialogFragment dialog = new EditPurchaseDialogFragment();
 
         // Supply job lead values as an argument.
         Bundle args = new Bundle();
         args.putString( "key", key );
         args.putInt( "position", position );
         args.putString("itemName", itemName);
+        args.putString("price", price);
         dialog.setArguments(args);
 
         return dialog;
@@ -54,21 +56,22 @@ public class EditItemDialogFragment extends DialogFragment {
         key = getArguments().getString( "key" );
         position = getArguments().getInt( "position" );
         itemName = getArguments().getString( "itemName" );
+        price = getArguments().getString("price");
 
         LayoutInflater inflater = (LayoutInflater) getActivity().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final View layout = inflater.inflate(R.layout.add_item_dialog, getActivity().findViewById( R.id.root ) );
+        final View layout = inflater.inflate(R.layout.edit_purchase_dialog, getActivity().findViewById( R.id.constraintLayout ) );
 
-        itemNameView = layout.findViewById( R.id.editText1 );
+        priceEditText = layout.findViewById( R.id.priceEditText );
 
         // Pre-fill the edit texts with the current values for this job lead.
         // The user will be able to modify them.
-        itemNameView.setText(itemName);
+        //priceEditText.setText(String.format("%.2f",price));
 
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity());
         builder.setView(layout);
 
         // Set the title of the AlertDialog
-        builder.setTitle( "Edit Item" );
+        builder.setTitle( "Edit Purchase" );
 
         // The Cancel button handler
         builder.setNegativeButton( android.R.string.cancel, new DialogInterface.OnClickListener() {
@@ -92,14 +95,15 @@ public class EditItemDialogFragment extends DialogFragment {
     private class SaveButtonClickListener implements DialogInterface.OnClickListener {
         @Override
         public void onClick(DialogInterface dialog, int which) {
-            String name = itemNameView.getText().toString();
-            Item item = new Item(name);
+            String price = priceEditText.getText().toString();
+            Item item = new Item(itemName);
             item.setKey(key);
+            item.setPrice(Double.parseDouble(price));
 
             // get the Activity's listener to add the new job lead
-            EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
+            EditPurchaseDialogListener listener = (EditPurchaseDialogFragment.EditPurchaseDialogListener) getActivity();
             // add the new job lead
-            listener.updateItem( position, item, SAVE );
+            listener.updatePurchase( position, item, SAVE );
 
             // close the dialog
             dismiss();
@@ -113,8 +117,8 @@ public class EditItemDialogFragment extends DialogFragment {
             item.setKey(key);
 
             // get the Activity's listener to add the new job lead
-            EditItemDialogFragment.EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();            // add the new job lead
-            listener.updateItem( position, item, DELETE );
+            EditPurchaseDialogFragment.EditPurchaseDialogListener listener = (EditPurchaseDialogFragment.EditPurchaseDialogListener) getActivity();            // add the new job lead
+            listener.updatePurchase( position, item, DELETE );
             // close the dialog
             dismiss();
         }
