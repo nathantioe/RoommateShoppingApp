@@ -110,27 +110,19 @@ public class RecentBuysActivity extends AppCompatActivity
     // It is called from the EditJobLeadDialogFragment.
     public void updatePurchase(int position, Item item, int action ) {
         if( action == EditPurchaseDialogFragment.SAVE ) {
-            //Log.d( DEBUG_TAG, "Updating job lead at: " + position + "(" + jobLead.getCompanyName() + ")" );
-
-            // Update the recycler view to show the changes in the updated job lead in that view
             recyclerAdapter.notifyItemChanged( position );
 
-            // Update this job lead in Firebase
-            // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
                     .child( "recent-purchases" )
                     .child( item.getKey() );
 
-            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
-            // to maintain job leads.
             ref.addListenerForSingleValueEvent( new ValueEventListener() {
                 @Override
                 public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
                     dataSnapshot.getRef().setValue(item).addOnSuccessListener( new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            //Log.d( DEBUG_TAG, "updated job lead at: " + position + "(" + jobLead.getCompanyName() + ")" );
                             Toast.makeText(getApplicationContext(), "Purchase updated",
                                     Toast.LENGTH_SHORT).show();
                         }
@@ -139,7 +131,6 @@ public class RecentBuysActivity extends AppCompatActivity
 
                 @Override
                 public void onCancelled( @NonNull DatabaseError databaseError ) {
-                    //Log.d( DEBUG_TAG, "failed to update job lead at: " + position + "(" + jobLead.getCompanyName() + ")" );
                     Toast.makeText(getApplicationContext(), "Failed to update ",
                             Toast.LENGTH_SHORT).show();
                 }
@@ -147,28 +138,20 @@ public class RecentBuysActivity extends AppCompatActivity
         }
         else if( action == EditPurchaseDialogFragment.DELETE ) {
 
-            // remove the deleted job lead from the list (internal list in the App)
             purchaseList.remove( position );
-
-            // Update the recycler view to remove the deleted job lead from that view
             recyclerAdapter.notifyItemRemoved( position );
 
-            // Delete this job lead in Firebase.
-            // Note that we are using a specific key (one child in the list)
             DatabaseReference ref = database
                     .getReference()
                     .child( "recent-purchases" )
                     .child( item.getKey() );
 
-            // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
-            // to maintain job leads.
             ref.addListenerForSingleValueEvent( new ValueEventListener() {
                 @Override
                 public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
                     dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
                         @Override
                         public void onSuccess(Void aVoid) {
-                            //Log.d( DEBUG_TAG, "deleted job lead at: " + position + "(" + jobLead.getCompanyName() + ")" );
                             Toast.makeText(getApplicationContext(), "Purchase deleted",
                                     Toast.LENGTH_SHORT).show();                        }
                     });
@@ -176,11 +159,36 @@ public class RecentBuysActivity extends AppCompatActivity
 
                 @Override
                 public void onCancelled( @NonNull DatabaseError databaseError ) {
-                    //Log.d( DEBUG_TAG, "failed to delete job lead at: " + position + "(" + jobLead.getCompanyName() + ")" );
                     Toast.makeText(getApplicationContext(), "Failed to delete ",
                             Toast.LENGTH_SHORT).show();
                 }
             });
+
+            item.setKey("");
+            item.setPrice(-1.0);
+            item.setPurchaser("");
+            addItemBackToShoppingList(item);
         }
+    }
+
+    public void addItemBackToShoppingList(Item item) {
+        FirebaseDatabase database = FirebaseDatabase.getInstance();
+        DatabaseReference myRef = database.getReference("shopping-list");
+        myRef.push().setValue(item)
+                .addOnSuccessListener( new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Item returned to shopping list",
+                                Toast.LENGTH_SHORT).show();
+
+                    }
+                })
+                .addOnFailureListener( new OnFailureListener() {
+                    @Override
+                    public void onFailure( @NonNull Exception e ) {
+                        Toast.makeText( getApplicationContext(), "Failed to move item back to shopping list",
+                                Toast.LENGTH_SHORT).show();
+                    }
+                });
     }
 }
