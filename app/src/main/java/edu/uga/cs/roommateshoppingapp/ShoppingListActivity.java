@@ -228,6 +228,9 @@ public class ShoppingListActivity extends AppCompatActivity
     }
 
     public void purchaseItem(int position, Item item) {
+        // delete from shopping list
+        updateItem(position, item, EditItemDialogFragment.DELETE);
+
         // add item to recent purchase
         FirebaseDatabase database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("recent-purchases");
@@ -238,7 +241,9 @@ public class ShoppingListActivity extends AppCompatActivity
                         recyclerView.post( new Runnable() {
                             @Override
                             public void run() {
-                                recyclerView.smoothScrollToPosition(itemList.size()-1 );
+                                if (itemList.size() != 0) {
+                                    recyclerView.smoothScrollToPosition(itemList.size() - 1);
+                                }
                             }
                         } );
                         Toast.makeText(getApplicationContext(), "Item created in recent purchases",
@@ -254,8 +259,5 @@ public class ShoppingListActivity extends AppCompatActivity
                     }
                 });
 
-
-        // delete from shopping list
-        updateItem(position, item, EditItemDialogFragment.DELETE);
     }
 }

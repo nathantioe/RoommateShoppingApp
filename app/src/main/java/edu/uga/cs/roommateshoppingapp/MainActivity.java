@@ -24,11 +24,13 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
+    //public static List<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
 
         Button register = findViewById(R.id.buttonRegistrer);
         register.setOnClickListener(new RegisterButtonClickListener());
+        //userList = new ArrayList<>();
 
     }
 
@@ -121,6 +124,9 @@ public class MainActivity extends AppCompatActivity {
                 boolean alreadyContainsEmail = false;
                 for( DataSnapshot postSnapshot: snapshot.getChildren() ) {
                     User user = postSnapshot.getValue(User.class);
+//                    if (!userList.contains(user)) {
+//                        userList.add(user);
+//                    }
                     if (user.getEmail().equals(email)) {
                         alreadyContainsEmail = true;
                         break;

@@ -22,7 +22,9 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
 
+import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class RecentBuysActivity extends AppCompatActivity
@@ -32,11 +34,9 @@ public class RecentBuysActivity extends AppCompatActivity
     public static final String DEBUG_TAG = "RecentBuysActivity";
 
     private RecyclerView recyclerView;
-    //private ItemRecyclerAdapter recyclerAdapter;
     private PurchaseRecyclerAdapter recyclerAdapter;
-
     private List<Item> purchaseList;
-
+    private List<User> userList;
     private FirebaseDatabase database;
 
     @Override
@@ -53,16 +53,12 @@ public class RecentBuysActivity extends AppCompatActivity
         settleButton.setOnClickListener( new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-//                DialogFragment newFragment = new AddItemDialogFragment();
-//                newFragment.show( getSupportFragmentManager(), null);
-                FirebaseUser user = FirebaseAuth.getInstance().getCurrentUser();
-                Toast.makeText(getApplicationContext(), "User: " + user.getEmail(),
-                        Toast.LENGTH_SHORT).show();
+                settle();
             }
         });
 
-        // initialize the Itemlist
-        purchaseList = new ArrayList<Item>();
+        purchaseList = new ArrayList<>();
+        userList = new ArrayList<>();
 
         // use a linear layout manager for the recycler view
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this);
@@ -103,6 +99,8 @@ public class RecentBuysActivity extends AppCompatActivity
                 System.out.println( "ValueEventListener: reading failed: " + databaseError.getMessage() );
             }
         } );
+
+        getAllUsers();
     }
 
     // This is our own callback for a DialogFragment which edits an existing JobLead.
@@ -171,8 +169,8 @@ public class RecentBuysActivity extends AppCompatActivity
         }
     }
 
-    public void addItemBackToShoppingList(Item item) {
-        FirebaseDatabase database = FirebaseDatabase.getInstance();
+    private void addItemBackToShoppingList(Item item) {
+       // database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("shopping-list");
         myRef.push().setValue(item)
                 .addOnSuccessListener( new OnSuccessListener<Void>() {
@@ -190,5 +188,83 @@ public class RecentBuysActivity extends AppCompatActivity
                                 Toast.LENGTH_SHORT).show();
                     }
                 });
+    }
+
+    public void settle() {
+        //List<User> userList = MainActivity.userList;
+        //getAllUsers();
+        double totalCost = 0.0;
+        NumberFormat formatter = NumberFormat.getCurrencyInstance();
+        HashMap<String, Double> userToAmount = new HashMap<>();
+        for (User user : userList) {
+            if (!userToAmount.containsKey(user.getEmail())) {
+                userToAmount.put(user.getEmail(), user.getAmountOwed());
+            }
+        }
+
+        for (Item item : purchaseList) {
+            totalCost = totalCost + item.getPrice();
+            userToAmount.put(item.getPurchaser(), userToAmount.get(item.getPurchaser()) + item.getPrice());
+        }
+
+        double averageCost = totalCost / userList.size();
+
+        String paymentForEachUser = "";
+        for (String key : userToAmount.keySet()) {
+            paymentForEachUser = paymentForEachUser + key + ": " + formatter.format(userToAmount.get(key)) + "\n";
+        }
+        paymentForEachUser = paymentForEachUser.substring(0, paymentForEachUser.length() - 1);
+        DialogFragment newFragment = SettleDialogFragment.newInstance(formatter.format(totalCost), formatter.format(averageCost), paymentForEachUser);
+        clearRecentPurchases();
+        newFragment.show( getSupportFragmentManager(), null);
+
+    }
+
+    private void clearRecentPurchases() {
+        DatabaseReference ref = database
+                .getReference()
+                .child( "recent-purchases" );
+
+        ref.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                dataSnapshot.getRef().removeValue().addOnSuccessListener( new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Toast.makeText(getApplicationContext(), "Cleared recent purchases",
+                                Toast.LENGTH_SHORT).show();                        }
+                });
+            }
+
+            @Override
+            public void onCancelled( @NonNull DatabaseError databaseError ) {
+                Toast.makeText(getApplicationContext(), "Failed to delete ",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
+    }
+
+    private void getAllUsers() {
+        DatabaseReference ref = database
+                .getReference()
+                .child( "users" );
+
+        ref.addListenerForSingleValueEvent( new ValueEventListener() {
+            @Override
+            public void onDataChange( @NonNull DataSnapshot dataSnapshot ) {
+                userList.clear(); // clear the current content; this is inefficient!
+                for( DataSnapshot postSnapshot: dataSnapshot.getChildren() ) {
+                    User user = postSnapshot.getValue(User.class);
+                    user.setKey( postSnapshot.getKey() );
+                    userList.add(user);
+                }
+            }
+
+            @Override
+            public void onCancelled( @NonNull DatabaseError databaseError ) {
+                Toast.makeText(getApplicationContext(), "Failed to retrieve users",
+                        Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 }

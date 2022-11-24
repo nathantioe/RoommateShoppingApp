@@ -4,9 +4,11 @@ public class User {
 
     private String key;
     private String email;
+    private double amountOwed;
 
     public User() {
         this.email = "";
+        this.amountOwed = 0.0;
     }
 
     public User(String email) {
@@ -28,4 +30,8 @@ public class User {
     public void setEmail(String email) {
         this.email = email;
     }
+
+    public double getAmountOwed() { return this.amountOwed; }
+
+    public void setAmountOwed(double amountOwed) { this.amountOwed = amountOwed; }
 }
