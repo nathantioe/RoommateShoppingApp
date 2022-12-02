@@ -68,6 +68,7 @@ public class MainActivity extends AppCompatActivity {
             Intent signInIntent = AuthUI.getInstance()
                     .createSignInIntentBuilder()
                     .setAvailableProviders(providers)
+                    .setTheme(R.style.Theme_RoommateShoppingApp)
                     .build();
             signInLauncher.launch(signInIntent);
         }
