@@ -28,9 +28,11 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+/**
+ * Represents the first page the user sees when he/she opens app
+ */
 public class MainActivity extends AppCompatActivity {
 
-    //public static List<User> userList;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -41,7 +43,6 @@ public class MainActivity extends AppCompatActivity {
 
         Button register = findViewById(R.id.buttonRegistrer);
         register.setOnClickListener(new RegisterButtonClickListener());
-        //userList = new ArrayList<>();
 
     }
 
@@ -113,6 +114,9 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Add user to firebase if not already there
+     */
     private void addUserIfNotAlready() {
         final FirebaseAuth firebaseAuth = FirebaseAuth.getInstance();
         String email = firebaseAuth.getCurrentUser().getEmail();
@@ -125,9 +129,6 @@ public class MainActivity extends AppCompatActivity {
                 boolean alreadyContainsEmail = false;
                 for( DataSnapshot postSnapshot: snapshot.getChildren() ) {
                     User user = postSnapshot.getValue(User.class);
-//                    if (!userList.contains(user)) {
-//                        userList.add(user);
-//                    }
                     if (user.getEmail().equals(email)) {
                         alreadyContainsEmail = true;
                         break;

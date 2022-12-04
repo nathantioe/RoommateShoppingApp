@@ -27,6 +27,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+/**
+ * Page that displays all recent purchases
+ */
 public class RecentBuysActivity extends AppCompatActivity
     implements EditPurchaseDialogFragment.EditPurchaseDialogListener
 {
@@ -72,18 +75,11 @@ public class RecentBuysActivity extends AppCompatActivity
         database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("recent-purchases");
 
-        // Set up a listener (event handler) to receive a value for the database reference.
-        // This type of listener is called by Firebase once by immediately executing its onDataChange method
-        // and then each time the value at Firebase changes.
-        //
-        // This listener will be invoked asynchronously, hence no need for an AsyncTask class, as in the previous apps
-        // to maintain job leads.
         myRef.addValueEventListener( new ValueEventListener() {
 
             @Override
             public void onDataChange( @NonNull DataSnapshot snapshot ) {
-                // Once we have a DataSnapshot object, we need to iterate over the elements and place them on our job lead list.
-                purchaseList.clear(); // clear the current content; this is inefficient!
+                purchaseList.clear();
                 for( DataSnapshot postSnapshot: snapshot.getChildren() ) {
                     Item item = postSnapshot.getValue(Item.class);
                     item.setKey( postSnapshot.getKey() );
@@ -103,9 +99,12 @@ public class RecentBuysActivity extends AppCompatActivity
         getAllUsers();
     }
 
-    // This is our own callback for a DialogFragment which edits an existing JobLead.
-    // The edit may be an update or a deletion of this JobLead.
-    // It is called from the EditJobLeadDialogFragment.
+    /**
+     * Function to update purchase made by user
+     * @param position
+     * @param item
+     * @param action
+     */
     public void updatePurchase(int position, Item item, int action ) {
         if( action == EditPurchaseDialogFragment.SAVE ) {
             recyclerAdapter.notifyItemChanged( position );
@@ -169,8 +168,11 @@ public class RecentBuysActivity extends AppCompatActivity
         }
     }
 
+    /**
+     * Function to add item back to the shopping list when deleted from recent buys
+     * @param item
+     */
     private void addItemBackToShoppingList(Item item) {
-       // database = FirebaseDatabase.getInstance();
         DatabaseReference myRef = database.getReference("shopping-list");
         myRef.push().setValue(item)
                 .addOnSuccessListener( new OnSuccessListener<Void>() {
@@ -190,9 +192,10 @@ public class RecentBuysActivity extends AppCompatActivity
                 });
     }
 
+    /**
+     * Function to compute calculations when users settle cost
+     */
     public void settle() {
-        //List<User> userList = MainActivity.userList;
-        //getAllUsers();
         double totalCost = 0.0;
         NumberFormat formatter = NumberFormat.getCurrencyInstance();
         HashMap<String, Double> userToAmount = new HashMap<>();
@@ -220,6 +223,9 @@ public class RecentBuysActivity extends AppCompatActivity
 
     }
 
+    /**
+     * Clear items in recent buys
+     */
     private void clearRecentPurchases() {
         DatabaseReference ref = database
                 .getReference()
@@ -244,6 +250,9 @@ public class RecentBuysActivity extends AppCompatActivity
         });
     }
 
+    /**
+     * Retrieve all users from DB
+     */
     private void getAllUsers() {
         DatabaseReference ref = database
                 .getReference()

@@ -21,6 +21,9 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 
+/**
+ * Page that allows users to register for the app
+ */
 public class RegisterActivity extends AppCompatActivity {
 
     private static final String DEBUG_TAG = "RegisterActivity";
@@ -67,11 +70,6 @@ public class RegisterActivity extends AppCompatActivity {
                                 // Sign in success, update UI with the signed-in user's information
                                 Log.d( DEBUG_TAG, "createUserWithEmail: success" );
 
-//                                FirebaseUser user = firebaseAuth.getCurrentUser();
-//                                User newUser = new User(user.getEmail());
-//                                newUser.setKey(user.getUid());
-//                                addUser(newUser);
-
                                 addUser(firebaseAuth);
                                 Intent intent = new Intent( RegisterActivity.this, MainMenuActivity.class );
                                 startActivity( intent );
@@ -87,6 +85,10 @@ public class RegisterActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * Add user to firebase
+     * @param firebaseAuth
+     */
     private void addUser(FirebaseAuth firebaseAuth) {
         String email = firebaseAuth.getCurrentUser().getEmail();
         FirebaseDatabase database = FirebaseDatabase.getInstance();

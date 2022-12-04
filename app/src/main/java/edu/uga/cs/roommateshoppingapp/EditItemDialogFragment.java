@@ -12,24 +12,21 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-// This is a DialogFragment to handle edits to a JobLead.
-// The edits are: updates and deletions of existing JobLeads.
+/**
+ * DialogFragment to handle edits to an item
+ */
 public class EditItemDialogFragment extends DialogFragment {
 
     // indicate the type of an edit
-    public static final int SAVE = 1;   // update an existing job lead
-    public static final int DELETE = 2; // delete an existing job lead
+    public static final int SAVE = 1;
+    public static final int DELETE = 2;
 
     private EditText itemNameView;
 
-    private int position;     // the position of the edited JobLead on the list of job leads
+    private int position;
     private String key;
     private String itemName;
 
-    // A callback listener interface to finish up the editing of a JobLead.
-    // ReviewJobLeadsActivity implements this listener interface, as it will
-    // need to update the list of JobLeads and also update the RecyclerAdapter to reflect the
-    // changes.
     public interface EditItemDialogListener {
         void updateItem(int position, Item item, int action);
     }
@@ -37,7 +34,6 @@ public class EditItemDialogFragment extends DialogFragment {
     public static EditItemDialogFragment newInstance(int position, String key, String itemName) {
         EditItemDialogFragment dialog = new EditItemDialogFragment();
 
-        // Supply job lead values as an argument.
         Bundle args = new Bundle();
         args.putString( "key", key );
         args.putInt( "position", position );
@@ -60,8 +56,6 @@ public class EditItemDialogFragment extends DialogFragment {
 
         itemNameView = layout.findViewById( R.id.editText1 );
 
-        // Pre-fill the edit texts with the current values for this job lead.
-        // The user will be able to modify them.
         itemNameView.setText(itemName);
 
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity());
@@ -96,12 +90,8 @@ public class EditItemDialogFragment extends DialogFragment {
             Item item = new Item(name);
             item.setKey(key);
 
-            // get the Activity's listener to add the new job lead
             EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();
-            // add the new job lead
             listener.updateItem( position, item, SAVE );
-
-            // close the dialog
             dismiss();
         }
     }
@@ -112,10 +102,8 @@ public class EditItemDialogFragment extends DialogFragment {
             Item item = new Item(itemName);
             item.setKey(key);
 
-            // get the Activity's listener to add the new job lead
             EditItemDialogFragment.EditItemDialogListener listener = (EditItemDialogFragment.EditItemDialogListener) getActivity();            // add the new job lead
             listener.updateItem( position, item, DELETE );
-            // close the dialog
             dismiss();
         }
     }

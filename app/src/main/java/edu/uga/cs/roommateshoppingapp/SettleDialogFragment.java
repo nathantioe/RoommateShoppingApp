@@ -12,6 +12,9 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
+/**
+ * DialogFragment that displays info after settling cost
+ */
 public class SettleDialogFragment extends DialogFragment {
 
     private TextView totalCostTextView;

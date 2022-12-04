@@ -14,6 +14,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import java.text.NumberFormat;
 import java.util.List;
 
+/**
+ * Represents RecyclerAdapter for the items in the recent buys
+ */
+
 public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecyclerAdapter.ItemHolder>{
 
     private List<Item> itemList;
@@ -61,12 +65,6 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
         holder.price.setText(formatter.format(item.getPrice()));
         holder.purchaser.setText(item.getPurchaser());
 
-        // We can attach an OnClickListener to the itemView of the holder;
-        // itemView is a public field in the Holder class.
-        // It will be called when the user taps/clicks on the whole item, i.e., one of
-        // the job leads shown.
-        // This will indicate that the user wishes to edit (modify or delete) this item.
-        // We create and show an EditJobLeadDialogFragment.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -76,17 +74,6 @@ public class PurchaseRecyclerAdapter extends RecyclerView.Adapter<PurchaseRecycl
                 editPurchaseFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
             }
         });
-
-//        holder.itemView.findViewById(R.id.purchaseButton).setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                PurchaseItemDialogFragment purchaseItemFragment =
-//                        PurchaseItemDialogFragment.newInstance( holder.getAdapterPosition(), key, name);
-//                purchaseItemFragment.show( ((AppCompatActivity)context).getSupportFragmentManager(), null);
-//            }
-//        });
-
-
     }
 
     @Override

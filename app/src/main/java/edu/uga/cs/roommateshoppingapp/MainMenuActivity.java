@@ -37,15 +37,11 @@ public class MainMenuActivity extends AppCompatActivity {
                 Intent intent = new
                         Intent(view.getContext(),
                         RecentBuysActivity.class);
-//                String message = "";
-//                intent.putExtra("MESSAGE", message);
                 view.getContext().startActivity(intent);
             } else if (view.getId() == R.id.buttonShoppingList ) {
                 Intent intent = new
                         Intent(view.getContext(),
                         ShoppingListActivity.class);
-//                String message = "";
-//                intent.putExtra("MESSAGE", message);
                 view.getContext().startActivity(intent);
             } else if (view.getId() == R.id.buttonLogout) {
                 finish();

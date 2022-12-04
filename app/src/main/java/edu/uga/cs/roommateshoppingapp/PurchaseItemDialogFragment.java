@@ -15,6 +15,9 @@ import androidx.fragment.app.DialogFragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 
+/**
+ * DialogFragment that allows you to purchase an item in recent buys
+ */
 public class PurchaseItemDialogFragment extends DialogFragment {
 
     private EditText itemPriceView;

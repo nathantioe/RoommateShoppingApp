@@ -1,5 +1,8 @@
 package edu.uga.cs.roommateshoppingapp;
 
+/**
+ * POJO class to represent an Item
+ */
 public class Item {
 
     private String key;

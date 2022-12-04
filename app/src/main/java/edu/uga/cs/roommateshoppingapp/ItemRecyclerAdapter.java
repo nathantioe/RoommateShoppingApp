@@ -13,6 +13,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
+/**
+ * Represents RecyclerAdapter for the items in the shopping list
+ */
 public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapter.ItemHolder>{
 
     private List<Item> itemList;
@@ -23,7 +26,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         this.context = context;
     }
 
-    // The adapter must have a ViewHolder class to "hold" one item to show.
     class ItemHolder extends RecyclerView.ViewHolder {
 
         TextView name;
@@ -41,7 +43,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         return new ItemHolder( view );
     }
 
-    // This method fills in the values of the Views to show a JobLead
     @Override
     public void onBindViewHolder(ItemHolder holder, int position ) {
         Item item = itemList.get( position );
@@ -51,12 +52,6 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
         holder.name.setText( item.getItemName());
 
-        // We can attach an OnClickListener to the itemView of the holder;
-        // itemView is a public field in the Holder class.
-        // It will be called when the user taps/clicks on the whole item, i.e., one of
-        // the job leads shown.
-        // This will indicate that the user wishes to edit (modify or delete) this item.
-        // We create and show an EditJobLeadDialogFragment.
         holder.itemView.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

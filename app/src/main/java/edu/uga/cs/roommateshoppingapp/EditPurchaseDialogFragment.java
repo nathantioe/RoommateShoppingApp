@@ -12,26 +12,23 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.fragment.app.DialogFragment;
 
-// This is a DialogFragment to handle edits to a JobLead.
-// The edits are: updates and deletions of existing JobLeads.
+/**
+ * DialogFragment to handle edit on purchase
+ */
 public class EditPurchaseDialogFragment extends DialogFragment {
 
     // indicate the type of an edit
-    public static final int SAVE = 1;   // update an existing job lead
-    public static final int DELETE = 2; // delete an existing job lead
+    public static final int SAVE = 1;
+    public static final int DELETE = 2;
 
     private EditText priceEditText;
 
-    private int position;     // the position of the edited JobLead on the list of job leads
+    private int position;
     private String key;
     private String itemName;
     private String price;
     private String purchaser;
 
-    // A callback listener interface to finish up the editing of a JobLead.
-    // ReviewJobLeadsActivity implements this listener interface, as it will
-    // need to update the list of JobLeads and also update the RecyclerAdapter to reflect the
-    // changes.
     public interface EditPurchaseDialogListener {
         void updatePurchase(int position, Item item, int action);
     }
@@ -39,7 +36,6 @@ public class EditPurchaseDialogFragment extends DialogFragment {
     public static EditPurchaseDialogFragment newInstance(int position, String key, String itemName, String price, String purchaser) {
         EditPurchaseDialogFragment dialog = new EditPurchaseDialogFragment();
 
-        // Supply job lead values as an argument.
         Bundle args = new Bundle();
         args.putString( "key", key );
         args.putInt( "position", position );
@@ -65,10 +61,6 @@ public class EditPurchaseDialogFragment extends DialogFragment {
         final View layout = inflater.inflate(R.layout.edit_purchase_dialog, getActivity().findViewById( R.id.constraintLayout ) );
 
         priceEditText = layout.findViewById( R.id.priceEditText );
-
-        // Pre-fill the edit texts with the current values for this job lead.
-        // The user will be able to modify them.
-        //priceEditText.setText(String.format("%.2f",price));
 
         AlertDialog.Builder builder = new AlertDialog.Builder( getActivity());
         builder.setView(layout);
@@ -104,7 +96,6 @@ public class EditPurchaseDialogFragment extends DialogFragment {
 
             // get the Activity's listener to add the new job lead
             EditPurchaseDialogListener listener = (EditPurchaseDialogFragment.EditPurchaseDialogListener) getActivity();
-            // add the new job lead
             listener.updatePurchase( position, item, SAVE );
 
             // close the dialog
